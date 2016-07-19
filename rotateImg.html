@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片旋转</title>
+    <style type="text/css">
+        #theimage{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <img src="img/1.png" id="theimage"  width="100%" alt="800×1422" style="cursor: pointer;" />
+    </div>
+
+    <script>
+        window.onload = function (){
+
+            var drag = new Drag('theimage');
+            drag.init();
+        };
+        // 构造函数Drag
+        function Drag(id){
+
+            this.obj = document.getElementById(id);
+            this.disX = 0;
+            this.disY = 0;
+        }
+        Drag.prototype.init = function (){
+            // this指针
+
+            var me = this;
+            this.obj.onmousedown = function (e){
+
+                var e = e || event;
+                me.mouseDown(e);
+                // 阻止默认事件
+                return false;
+            };
+        };
+        Drag.prototype.mouseDown = function (e){
+            // this指针
+            var me = this;
+
+            this.disX = e.clientX - this.obj.offsetLeft;
+            this.disY = e.clientY - this.obj.offsetTop;
+
+            document.onmousemove = function (e){
+                var e = e || window.event;
+                me.mouseMove(e);
+            };
+            document.onmouseup = function (){
+                me.mouseUp();
+            }
+
+            var centerX = this.getElCenter(this.obj).centerX;
+            var centerY = this.getElCenter(this.obj).centerY;
+
+            var touchX = e.pageX;
+            var touchY = e.pageY;
+
+
+            this.obj.startAngle = 180 * Math.atan(( centerY - touchY)/(touchX - centerX)) / Math.PI;
+
+
+        };
+
+        Drag.prototype.mouseMove = function (e){
+
+//            if (e.clientX - this.disX < 0){
+//                this.obj.style.left = 0 + 'px';
+//            } else {
+//                this.obj.style.left = (e.clientX - this.disX) + 'px';
+//            }
+//
+//            if (e.clientY - this.disY < 0 ){
+//                this.obj.style.top = 0 + 'px';
+//            } else {
+//                this.obj.style.top = (e.clientY - this.disY) + 'px';
+//            }
+
+
+            var centerX = this.getElCenter(this.obj).centerX;
+            var centerY = this.getElCenter(this.obj).centerY;
+
+            var touchX = e.pageX;
+            var touchY = e.pageY;
+
+            this.obj.endAngle = 180 * Math.atan(( centerY - touchY)/(touchX - centerX)) / Math.PI;
+
+            this.obj.angle = (this.obj.startAngle - this.obj.endAngle).toFixed(2)
+            console.log(this.obj.angle);
+
+            this.rotate(this.obj,this.obj.angle);
+
+        };
+        Drag.prototype.mouseUp = function (){
+            document.onmousemove = null;
+            document.onmouseup = null;
+        };
+
+
+        Drag.prototype.getElCenter =  function (obj) {
+            obj.centerX  = obj.offsetLeft + obj.offsetWidth / 2;
+            obj.centerY = obj.offsetTop + obj.offsetHeight / 2;
+            return obj;
+        }
+
+
+
+        Drag.prototype.rotate = function(obj,angle) {
+            console.log(angle)
+            console.log(obj.tagName)
+            obj.style.transform = "rotate("+angle+"deg)"
+        }
+
+
+
+
+
+    </script>
+</body>
+</html>

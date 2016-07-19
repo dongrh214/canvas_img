@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拖拽</title>
+</head>
+<body>
+    <style>
+        #box{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+    </style>
+    <div id = "box">
+
+    </div>
+
+    <script>
+        window.onload = function (){
+            var drag = new Drag('box');
+            drag.init();
+        };
+        // 构造函数Drag
+        function Drag(id){
+            this.obj = document.getElementById(id);
+            this.disX = 0;
+            this.disY = 0;
+        }
+        Drag.prototype.init = function (){
+            // this指针
+            var me = this;
+            this.obj.onmousedown = function (e){
+                var e = e || event;
+                me.mouseDown(e);
+                // 阻止默认事件
+                return false;
+            };
+        };
+        Drag.prototype.mouseDown = function (e){
+            // this指针
+            var me = this;
+            this.disX = e.clientX - this.obj.offsetLeft;
+            this.disY = e.clientY - this.obj.offsetTop;
+            document.onmousemove = function (e){
+                var e = e || window.event;
+                me.mouseMove(e);
+            };
+            document.onmouseup = function (){
+                me.mouseUp();
+            }
+        };
+        Drag.prototype.mouseMove = function (e){
+
+            if (e.clientX - this.disX < 0){
+                this.obj.style.left = 0 + 'px';
+            } else {
+                this.obj.style.left = (e.clientX - this.disX) + 'px';
+            }
+
+            if (e.clientY - this.disY < 0 ){
+                this.obj.style.top = 0 + 'px';
+            } else {
+                this.obj.style.top = (e.clientY - this.disY) + 'px';
+            }
+
+
+
+        };
+        Drag.prototype.mouseUp = function (){
+            document.onmousemove = null;
+            document.onmouseup = null;
+        };
+
+    </script>
+</body>
+</html>
