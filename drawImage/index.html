@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<canvas id="canvas" style="display: block;margin: 0 auto;border: 1px solid #aaa">
+    您的浏览器尚不支持canvas
+</canvas>
+<script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var image = new  Image();
+    window.onload = function(){
+        canvas.width = 712;
+        canvas.height = 712;
+        image.src = "../img/2.jpg";
+        image.onload = function () {   //必须在onload中调用
+            //context.drawImage(image,dx,dy)
+            //context.drawImage(image,0,0)
+
+            //context.drawImage(image,dx,dy,dw,dh)
+            //context.drawImage(image,0,0,canvas.width,canvas.height)
+
+            //context.drawImage(image,sx,sy,sw,sh,dx,dy,dw,dh)
+            context.drawImage(image,100,100,400,400,0,0,canvas.width,canvas.height);
+        }
+    }
+</script>
+</body>
+</html>

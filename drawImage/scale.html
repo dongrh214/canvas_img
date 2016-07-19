@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body style="background-color: black">
+<canvas id="canvas" style="display: block;margin: 0 auto;border: 1px solid #aaa">
+    您的浏览器尚不支持canvas
+</canvas>
+<input id="scaleRange" type="range" style="display: block;margin: 20px auto;width: 800px;" min="0.5" max="2.0" step="0.01" value="1.0">
+<canvas id="watermark-canvas" style="display: none;margin: 0 auto;">
+    您的浏览器尚不支持canvas
+</canvas>
+
+<script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var image = new  Image();
+    var slider = document.getElementById('scaleRange');
+
+    var watermarkCanvas = document.getElementById('watermark-canvas');
+    var watermarkContext = watermarkCanvas.getContext("2d");
+
+
+    window.onload = function(){
+        canvas.width = 1024;
+        canvas.height = 712;
+
+        var scale = slider.value;
+
+        image.src = "../img/2.jpg";
+        image.onload = function () {   //必须在onload中调用
+
+            drawImageByScale(scale);
+
+            slider.onmousemove = function(){
+                scale = slider.value;
+                drawImageByScale(scale)
+            }
+        }
+
+
+        //setup matermark canvas
+        watermarkCanvas.width=600
+        watermarkCanvas.height = 100;
+
+        watermarkContext.font = "bold 50px Arial"
+        watermarkContext.lineWidth = "1";
+        watermarkContext.fillStyle = "rgba(255,255,255,0.5)";
+        watermarkContext.textBaseline = "middle";
+        watermarkContext.fillText("==my canvas==",20,50)
+
+    };
+
+    function drawImageByScale(scale) {
+        var imageWidth = 1024 * scale;
+        var imageHeight = 712 * scale;
+
+        var dx = canvas.width/2 - imageWidth/2;
+        var dy = canvas.height/2 - imageHeight/2;
+
+        context.clearRect(0,0,canvas.width,canvas.height);   //清楚历史记录
+        context.drawImage(image,dx,dy,imageWidth,imageHeight);
+        context.drawImage(watermarkCanvas,canvas.width-watermarkCanvas.width,canvas.height-watermarkCanvas.height)
+
+    }
+</script>
+</body>
+</html>
